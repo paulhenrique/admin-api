@@ -1,46 +1,29 @@
-// ============================================
-// Database
-const mongoose = require("mongoose");
+const api = require('./routes/api');
 const env = require('dotenv').config();
-const ProjectSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: String,
-  completed: Boolean,
-  created_at: { type: Date, default: Date.now },
-});
+const mongoose = require('mongoose');
+// const { admin, adminBroOptions } = require('./admin');
 
-const Project = mongoose.model("Project", ProjectSchema);
+const express = require("express");
+const server = express();
 
-// ============================================
-// Admin Bro
 const AdminBro = require('admin-bro')
 const AdminBroExpress = require('@admin-bro/express')
 const AdminBroMongoose = require('@admin-bro/mongoose')
 
-// use mongoose in AdminBro
-AdminBro.registerAdapter(AdminBroMongoose)
+const Project = require('./models/Project');
 
-// config
+AdminBro.registerAdapter(AdminBroMongoose);
+
 const adminBroOptions = new AdminBro({
   resources: [Project],
   rootPath: '/admin'
-})
-const router = AdminBroExpress.buildRouter(adminBroOptions)
+});
+
+const admin = AdminBroExpress.buildRouter(adminBroOptions);
 
 
-// ============================================
-// Server
-const express = require("express");
-const server = express();
-
-server
-  .use(adminBroOptions.options.rootPath, router)
-
-// =============================================
-// Run App
+server.use(adminBroOptions.options.rootPath, admin)
+server.use('/api', api);
 
 const run = async () => {
   await mongoose.connect(process.env.MONGO_URI, {
@@ -51,4 +34,4 @@ const run = async () => {
   await server.listen(5500, () => console.log("Server started"));
 }
 
-run()
+run();
