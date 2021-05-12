@@ -2,7 +2,7 @@ const api = require('./routes/api');
 const env = require('dotenv').config();
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-// const { admin, adminBroOptions } = require('./admin');
+
 
 const express = require("express");
 const server = express();
@@ -13,6 +13,7 @@ const AdminBroMongoose = require('@admin-bro/mongoose')
 
 const Project = require('./models/Project');
 const User = require('./models/User');
+const Team = require('./models/Team');
 
 AdminBro.registerAdapter(AdminBroMongoose);
 
@@ -57,7 +58,8 @@ const adminBroOptions = new AdminBro({
           }
         }
       }
-    }
+    },
+    Team
   ],
   locale: {
     translations: {
