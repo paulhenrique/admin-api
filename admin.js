@@ -3,7 +3,6 @@ const env = require('dotenv').config();
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-
 const express = require("express");
 const server = express();
 
@@ -11,60 +10,22 @@ const AdminBro = require('admin-bro')
 const AdminBroExpress = require('@admin-bro/express')
 const AdminBroMongoose = require('@admin-bro/mongoose')
 
-const Project = require('./models/Project');
+const resources = require('./database/resources');
+
+
 const User = require('./models/User');
-const Team = require('./models/Team');
 
 AdminBro.registerAdapter(AdminBroMongoose);
 
 const adminBroOptions = new AdminBro({
-  resources: [
-    {
-      resource: Project, options: {
-        properties: {
-          description: { type: 'richtext' },
-          created_at: {
-            isVisible: { edit: false, list: true, show: true, filter: true }
-          }
-        }
-      }
-    },
-    {
-      resource: User,
-      options: {
-        properties: {
-          encryptedPassword: {
-            isVisible: false,
-          },
-          password: {
-            type: 'string',
-            isVisible: {
-              list: false, edit: true, filter: false, show: false,
-            },
-          },
-        },
-        actions: {
-          new: {
-            before: async (request) => {
-              if (request.payload.password) {
-                request.payload = {
-                  ...request.payload,
-                  encryptedPassword: await bcrypt.hash(request.payload.password, 10),
-                  password: undefined,
-                }
-              }
-              return request
-            },
-          }
-        }
-      }
-    },
-    Team
-  ],
+  resources: [...resources],
   locale: {
     translations: {
       labels: {
-        Project: 'Projetos Desenvolvidos'
+        Project: 'Projetos Desenvolvidos',
+        Team: 'Membros do grupo de Pesquisa',
+        University: 'Universidades Parceiras',
+        Financiers: 'Instituições Financiadoras'
       }
     }
   },
@@ -74,6 +35,7 @@ const adminBroOptions = new AdminBro({
 const admin = AdminBroExpress.buildAuthenticatedRouter(adminBroOptions, {
   authenticate: async (email, password) => {
     const user = await User.findOne({ email })
+
     if (user) {
       const matched = await bcrypt.compare(password, user.encryptedPassword)
       if (matched) {
