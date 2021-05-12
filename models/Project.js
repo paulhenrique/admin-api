@@ -4,8 +4,38 @@ const ProjectSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  shortDescription: String,
-  description: String,
+  shortDescription: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  link: {
+    type: String,
+    required: true,
+  },
+  institutions: {
+    type: String,
+    required: true,
+  },
+  participant: [
+    {
+      name: {
+        type: String,
+        required: true,
+      },
+      photoURL: {
+        type: String,
+        required: true,
+      },
+      lattesOrLinkedin: {
+        type: String,
+        required: true,
+      },
+    }
+  ],
   created_at: { type: Date, default: Date.now },
 });
 
