@@ -1,17 +1,24 @@
 const express = require('express');
 const api = express.Router();
 const Project = require('../models/Project');
+const Financiers = require('../models/Financiers');
+const Team = require('../models/Team');
+const University = require('../models/University');
 
 api.get('/', async (req, res) => {
   try {
     const projetos = await Project.find();
-    res.json({ error: false, projetos });
+    const team = await Team.find();
+    const university = await University.find();
+    const financiers = await Financiers.find();
+
+    res.json({ error: false, projetos, team, university, financiers });
   } catch (err) {
     res.json({ error: true, message: err.message })
   }
 });
 
-api.get('/:id', async (req, res) => {
+api.get('/projetos/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const projetos = await Project.find({ '_id': id });
@@ -22,5 +29,6 @@ api.get('/:id', async (req, res) => {
     res.json({ error: true, message: err.message })
   }
 });
+
 
 module.exports = api;

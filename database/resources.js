@@ -48,7 +48,25 @@ const resources = [{
     }
   }
 },
-  Team,
+{
+  resource: Team,
+  options: {
+    properties: {
+      shortDescription: {
+        type: 'string',
+        isVisible: {
+          list: false, edit: true, filter: true, show: false,
+        },
+      },
+      lattesOrLinkedin: {
+        type: 'string',
+        isVisible: {
+          list: false, edit: true, filter: false, show: false,
+        },
+      },
+    }
+  }
+},
   Financiers,
   University
 ];
