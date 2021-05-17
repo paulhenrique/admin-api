@@ -2,9 +2,11 @@ const api = require('./routes/api');
 const env = require('dotenv').config();
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const cors = require('cors');
 
 const express = require("express");
 const server = express();
+
 
 const AdminBro = require('admin-bro')
 const AdminBroExpress = require('@admin-bro/express')
@@ -47,7 +49,7 @@ const admin = AdminBroExpress.buildAuthenticatedRouter(adminBroOptions, {
   cookiePassword: 'some-secret-password-used-to-secure-cookie',
 });
 
-
+server.use(cors());
 server.use(adminBroOptions.options.rootPath, admin)
 server.use('/api', api);
 
