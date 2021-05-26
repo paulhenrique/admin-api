@@ -59,7 +59,7 @@ const run = async () => {
     useUnifiedTopology: true
   });
 
-  await server.listen(5500, () => console.log("Server started"));
+  await server.listen(process.env.PORT, () => console.log("Server started"));
 }
 
 run();
